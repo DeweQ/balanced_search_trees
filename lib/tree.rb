@@ -31,5 +31,23 @@ module DataStructure
       puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
       pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
     end
+
+    def insert(data)
+      new_node = Node.new(data)
+      node = @root
+      while node
+        break if node.data == data
+
+        if node > new_node
+          return node.left = new_node if node.left.nil?
+
+          node = node.left
+        else
+          return node.right = new_node if node.right.nil?
+
+          node = node.right
+        end
+      end
+    end
   end
 end
