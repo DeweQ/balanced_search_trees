@@ -33,20 +33,20 @@ module DataStructure
     end
 
     def insert(data)
-      new_node = Node.new(data)
-      node = @root
-      while node
-        break if node.data == data
+      insert_recursive(Node.new(data), @root)
+    end
 
-        if node > new_node
-          return node.left = new_node if node.left.nil?
+    def insert_recursive(data_node, current_node)
+      nil if data_node == current_node
 
-          node = node.left
-        else
-          return node.right = new_node if node.right.nil?
+      if data_node < current_node
+        return current_node.left = data_node if current_node.left.nil?
 
-          node = node.right
-        end
+        insert_recursive(data_node, current_node.left)
+      else
+        return current_node.right = data_node if current_node.right.nil?
+
+        insert_recursive(data_node, current_node.right)
       end
     end
   end
