@@ -94,6 +94,18 @@ module DataStructure
       aux[:max]
     end
 
+    def depth(data)
+      d = 0
+      node = root
+      until node.nil?
+        break if node.data == data
+
+        d += 1
+        node = node.data < data ? node.right : node.left
+      end
+      d
+    end
+
     private
 
     def find_height(node, aux = {})
