@@ -5,7 +5,7 @@ module DataStructure
   class Tree
     attr_reader :root
 
-    def initialize(array)
+    def initialize(array = Array.new(15) { rand(1..100) })
       @root = build_tree(array)
     end
 
@@ -31,6 +31,17 @@ module DataStructure
         parent = node
         return delete_node(node, parent) if node.data == data
 
+        node = node.data > data ? node.left : node.right
+      end
+    end
+
+    def find(data)
+      node = root
+      until node.nil?
+        return node if node.nil? || node.data == data
+
+        # require "pry-byebug"
+        # binding.pry
         node = node.data > data ? node.left : node.right
       end
     end
