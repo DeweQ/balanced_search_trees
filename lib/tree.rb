@@ -5,7 +5,7 @@ module DataStructure
   class Tree
     attr_reader :root
 
-    def initialize(array = Array.new(15) { rand(1..100) })
+    def initialize(array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15])
       @root = build_tree(array)
     end
 
@@ -27,10 +27,11 @@ module DataStructure
     def delete(data)
       node = root
       parent = nil
+
       until node.data.nil?
-        parent = node
         return delete_node(node, parent) if node.data == data
 
+        parent = node
         node = node.data > data ? node.left : node.right
       end
     end
@@ -58,34 +59,54 @@ module DataStructure
       ary unless block_given?
     end
 
-    def inorder(node = root, ary = [])
+    def inorder(node = root, ary = [], &block)
       return if node.nil?
 
-      inorder(node.left, ary)
+      inorder(node.left, ary, &block)
       block_given? ? (yield node) : ary << node.data
-      inorder(node.right, ary)
+      inorder(node.right, ary, &block)
       ary unless block_given?
     end
 
-    def preorder(node = root, ary = [])
+    def preorder(node = root, ary = [], &block)
       return if node.nil?
 
       block_given? ? (yield node) : ary << node.data
-      preorder(node.left, ary)
-      preorder(node.right, ary)
+      preorder(node.left, ary, &block)
+      preorder(node.right, ary, &block)
       ary unless block_given?
     end
 
-    def postorder(node = root, ary = [])
+    def postorder(node = root, ary = [], &block)
       return if node.nil?
 
-      postorder(node.left, ary)
-      postorder(node.right, ary)
+      postorder(node.left, ary, &block)
+      postorder(node.right, ary, &block)
       block_given? ? (yield node) : ary << node.data
       ary unless block_given?
+    end
+
+    def height(data)
+      return unless (node = find(data))
+
+      aux = { i: 0, max: 0 }
+      find_height(node, aux)
+      aux[:max]
     end
 
     private
+
+    def find_height(node, aux = {})
+      return if node.nil?
+
+      aux[:i] += 1
+      find_height(node.left, aux)
+      find_height(node.right, aux)
+      aux[:i] -= 1
+      return unless node.right.nil? && node.left.nil?
+
+      aux[:max] = aux[:i] if aux[:i] > aux[:max]
+    end
 
     def build_tree_root(array, left, right)
       return Node.new(array[left]) if left == right
