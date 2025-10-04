@@ -14,10 +14,10 @@ module DataStructure
       build_tree_root(prep, 0, prep.size - 1)
     end
 
-    def pretty_print(node = @root, prefix = "", is_left = true)
-      pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
+    def pretty_print(node = @root, prefix = "", is_left: true)
+      pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", is_left: false) if node.right
       puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
-      pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
+      pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", is_left: true) if node.left
     end
 
     def insert(data)
@@ -43,6 +43,18 @@ module DataStructure
         # require "pry-byebug"
         # binding.pry
         node = node.data > data ? node.left : node.right
+      end
+    end
+
+    def level_order
+      return unless block_given?
+
+      queue = [root]
+      until queue.empty?
+        current = queue.shift
+        yield current.data
+        queue.push(current.left) unless current.left.nil?
+        queue.push(current.right) unless current.right.nil?
       end
     end
 
