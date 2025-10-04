@@ -47,15 +47,15 @@ module DataStructure
     end
 
     def level_order
-      return unless block_given?
-
       queue = [root]
+      ary = []
       until queue.empty?
         current = queue.shift
-        yield current.data
+        block_given? ? (yield current) : ary << current.data
         queue.push(current.left) unless current.left.nil?
         queue.push(current.right) unless current.right.nil?
       end
+      ary unless block_given?
     end
 
     private
