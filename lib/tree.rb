@@ -58,6 +58,33 @@ module DataStructure
       ary unless block_given?
     end
 
+    def inorder(node = root, ary = [])
+      return if node.nil?
+
+      inorder(node.left, ary)
+      block_given? ? (yield node) : ary << node.data
+      inorder(node.right, ary)
+      ary unless block_given?
+    end
+
+    def preorder(node = root, ary = [])
+      return if node.nil?
+
+      block_given? ? (yield node) : ary << node.data
+      preorder(node.left, ary)
+      preorder(node.right, ary)
+      ary unless block_given?
+    end
+
+    def postorder(node = root, ary = [])
+      return if node.nil?
+
+      postorder(node.left, ary)
+      postorder(node.right, ary)
+      block_given? ? (yield node) : ary << node.data
+      ary unless block_given?
+    end
+
     private
 
     def build_tree_root(array, left, right)
