@@ -14,6 +14,29 @@ module DataStructure
       build_tree_root(prep, 0, prep.size - 1)
     end
 
+    def pretty_print(node = @root, prefix = "", is_left = true)
+      pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
+      puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
+      pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
+    end
+
+    def insert(data)
+      insert_recursive(Node.new(data), @root)
+    end
+
+    def delete(data)
+      node = root
+      parent = nil
+      until node.data.nil?
+        parent = node
+        return delete_node(node, parent) if node.data == data
+
+        node = node.data > data ? node.left : node.right
+      end
+    end
+
+    private
+
     def build_tree_root(array, left, right)
       return Node.new(array[left]) if left == right
 
@@ -26,18 +49,8 @@ module DataStructure
       node
     end
 
-    def pretty_print(node = @root, prefix = "", is_left = true)
-      pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
-      puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
-      pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
-    end
-
-    def insert(data)
-      insert_recursive(Node.new(data), @root)
-    end
-
     def insert_recursive(data_node, current_node)
-      nil if data_node == current_node
+      return if data_node == current_node
 
       if data_node < current_node
         return current_node.left = data_node if current_node.left.nil?
@@ -48,6 +61,41 @@ module DataStructure
 
         insert_recursive(data_node, current_node.right)
       end
+    end
+
+    def delete_node(node, parent)
+      return delete_leaf(node, parent) if node.left.nil? && node.right.nil?
+
+      if node.right.nil?
+        predecessor_deletion(node.left, node)
+      else
+        successor_deletion(node.right, node)
+      end
+    end
+
+    def predecessor_deletion(start, deletion_node)
+      parent = deletion_node
+      until start.right.nil?
+        parent = start
+        start = start.right
+      end
+      deletion_node.data, start.data = start.data, deletion_node.data
+      delete_node(start, parent)
+    end
+
+    def successor_deletion(start, deletion_node)
+      parent = deletion_node
+      until start.left.nil?
+        parent = start
+        start = start.left
+      end
+      deletion_node.data, start.data = start.data, deletion_node.data
+      delete_node(start, parent)
+    end
+
+    def delete_leaf(leaf, parent)
+      parent.right = nil if parent.right == leaf
+      parent.left = nil if parent.left == leaf
     end
   end
 end
