@@ -106,6 +106,20 @@ module DataStructure
       d
     end
 
+    def balanced?(node = root)
+      return true if node.nil?
+
+      left_height = node.left ? height(node.left.data) : 0
+      right_height = node.right ? height(node.right.data) : 0
+      difference = (left_height - right_height).abs
+
+      difference <= 1 && balanced?(node.left) && balanced?(node.right)
+    end
+
+    def rebalance
+      @root = build_tree(inorder)
+    end
+
     private
 
     def find_height(node, aux = {})
