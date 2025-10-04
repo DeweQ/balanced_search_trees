@@ -28,7 +28,7 @@ module DataStructure
       node = root
       parent = nil
 
-      until node.data.nil?
+      until node.nil?
         return delete_node(node, parent) if node.data == data
 
         parent = node
